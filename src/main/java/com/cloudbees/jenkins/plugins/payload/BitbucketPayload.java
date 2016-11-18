@@ -52,9 +52,12 @@ public class BitbucketPayload extends InvisibleAction implements EnvironmentCont
             JSONObject repository = payload.getJSONObject("repository");
             JSONObject actor = payload.getJSONObject("actor");
 
-            this.user = actor.getString("username");
+            // Bitbucket 4.x no longer sends the actor or links object in the Hook JSON payload, so specify them here as a workaround
+            // TODO: my changes likely break compatibility with Bitbucket 2.x
+            // TODO: we should make the scmUrl configurable or try and parse it from all the changesets
+            this.user = "BitBucket";
             this.scm = repository.has("scm") ? repository.getString("scm") : "git";
-            this.scmUrl = repository.getJSONObject("links").getJSONObject("html").getString("href");
+            this.scmUrl = "https://bitbucket.example.com:8443/scm/" + repository.getJSONObject("project").getString("key").toLowerCase() + "/" + repository.getString("name");
         } else if (payload.has("scm")) {
             LOGGER.log(Level.INFO, "Received commit hook notification for hg: {0}", payload);
             this.user = payload.getJSONObject("owner").getString("username");

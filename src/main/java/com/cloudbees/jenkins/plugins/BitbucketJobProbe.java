@@ -75,7 +75,7 @@ public class BitbucketJobProbe {
 
                                 bitbucketTrigger.onPost(bitbucketEvent, bitbucketPayload);
                             } else {
-                                LOGGER.log(Level.FINE, "{0} SCM doesn't match remote repo {1}", new Object[]{job.getName(), remote});
+                                LOGGER.log(Level.FINE, scmTrigger.getKey() + " SCM doesn't match remote repo " + remote);
                             }
                         }
                     }
