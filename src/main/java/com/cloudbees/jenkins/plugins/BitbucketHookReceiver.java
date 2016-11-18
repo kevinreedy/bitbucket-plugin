@@ -82,6 +82,11 @@ public class BitbucketHookReceiver implements UnprotectedRootAction {
                 BitbucketEvent bitbucketEvent = new BitbucketEvent(req.getHeader("x-event-key"));
                 BitbucketPayloadProcessor bitbucketPayloadProcessor = payloadProcessorFactory.create(bitbucketEvent);
                 bitbucketPayloadProcessor.processPayload(payload);
+            } else if (req.getHeader("user-agent").contains("Bitbucket 4.")) {
+              LOGGER.log(Level.INFO, "Processing 4.x POST service payload");
+              BitbucketEvent bitbucketEvent = new BitbucketEvent("repo:push");
+              BitbucketPayloadProcessor bitbucketPayloadProcessor = payloadProcessorFactory.create(bitbucketEvent);
+              bitbucketPayloadProcessor.processPayload(payload);
             } else {
                 LOGGER.log(Level.INFO, "Processing old POST service payload");
                 BitbucketPayloadProcessor bitbucketPayloadProcessor =
